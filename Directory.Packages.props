@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <MauiVersion>$(MauiVersion)</MauiVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.AspNetCore.Datasync" Version="6.0.7" />
+    <PackageVersion Include="Microsoft.Datasync.Client" Version="6.0.7" />
+    <PackageVersion Include="Microsoft.Datasync.Client.SQLiteStore" Version="6.0.7" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Datasync.Client" Version="6.0.7" />
+  </ItemGroup>
+</Project>

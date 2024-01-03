@@ -57,6 +57,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material" />
+		<PackageReference Include="CommunityToolkit.Maui" />
+		<PackageReference Include="CommunityToolkit.Mvvm" />
 		<PackageReference Include="Microsoft.Datasync.Client" />
 		<PackageReference Include="Microsoft.Datasync.Client.SQLiteStore" />
 		<PackageReference Include="Microsoft.Maui.Controls" />
@@ -65,7 +68,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="TodoList\" />
+	  <ProjectReference Include="..\TodoApp.Data\TodoApp.Data.csproj" />
 	</ItemGroup>
 
 </Project>

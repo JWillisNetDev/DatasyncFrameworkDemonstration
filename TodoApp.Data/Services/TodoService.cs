@@ -5,8 +5,9 @@ namespace TodoApp.Data.Services;
 
 public class TodoService : ITodoService
 {
-	private readonly DatasyncClient _Client;
 	private readonly IOfflineTable<TodoItem> _Table;
+
+	public event EventHandler<TodoServiceEventArgs>? TodoItemsUpdated;
 
 	public TodoService(DatasyncClient client)
 	{
@@ -15,36 +16,38 @@ public class TodoService : ITodoService
 		{
 			throw new ArgumentException("Datasync client does not have an associated offline store", nameof(client));
 		}
-
-		_Client = client;
 		_Table = client.GetOfflineTable<TodoItem>();
 	}
 
-	public Task AddOrUpdateItemAsync(TodoItem item)
+	public async Task AddOrUpdateItemAsync(TodoItem item)
 	{
-		throw new NotImplementedException();
+		ArgumentNullException.ThrowIfNull(item);
+		if (string.IsNullOrEmpty(item.Id))
+		{
+			await _Table.InsertItemAsync(item);
+			TodoItemsUpdated?.Invoke(this, new TodoServiceEventArgs(TodoServiceEventArgs.ListAction.Add, item));
+			return;
+		}
+
+		await _Table.ReplaceItemAsync(item);
+		TodoItemsUpdated?.Invoke(this, new TodoServiceEventArgs(TodoServiceEventArgs.ListAction.Update, item));
 	}
 
-	public Task<TodoItem> GetAllItemsAsync()
+	public async Task<IReadOnlyList<TodoItem>> GetAllItemsAsync()
 	{
-		throw new NotImplementedException();
+		return await _Table.GetAsyncItems().ToArrayAsync();
 	}
 
-	public Task RemoveItemAsync(TodoItem item)
+	public async Task RemoveItemAsync(TodoItem item)
 	{
-		throw new NotImplementedException();
+		ArgumentNullException.ThrowIfNull(item);
+		await _Table.DeleteItemAsync(item);
+		TodoItemsUpdated?.Invoke(this, new TodoServiceEventArgs(TodoServiceEventArgs.ListAction.Delete, item));
 	}
 
-	public Task SynchronizeAsync()
+	public async Task SynchronizeAsync()
 	{
-		throw new NotImplementedException();
+		await _Table.PushItemsAsync();
+		await _Table.PullItemsAsync();
 	}
-}
-
-public interface ITodoService
-{
-	Task AddOrUpdateItemAsync(TodoItem item);
-	Task<TodoItem> GetAllItemsAsync();
-	Task RemoveItemAsync(TodoItem item);
-	Task SynchronizeAsync();
 }

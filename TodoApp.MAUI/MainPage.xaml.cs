@@ -1,22 +1,36 @@
-﻿namespace TodoApp.MAUI
+﻿using TodoApp.Data.Models;
+using TodoApp.MAUI.TodoList;
+
+namespace TodoApp.MAUI
 {
 	public partial class MainPage : ContentPage
 	{
-		int count = 0;
-
-		public MainPage() {
+		public TodoListViewModel TodoListViewModel { get; }
+		public MainPage(TodoListViewModel viewModel)
+		{
+			BindingContext = TodoListViewModel = viewModel;
 			InitializeComponent();
+			TodoListViewModel.InitializeAsync();
 		}
 
-		private void OnCounterClicked(object sender, EventArgs e) {
-			count++;
+		private void CheckBox_OnCheckedChanged(object? sender, CheckedChangedEventArgs e)
+		{
+			if (sender is not TodoItem item)
+			{
+				return;
+			}
 
-			if (count == 1)
-				CounterBtn.Text = $"Clicked {count} time";
-			else
-				CounterBtn.Text = $"Clicked {count} times";
+			TodoListViewModel.UpdateTaskCommand.Execute(item);
+		}
 
-			SemanticScreenReader.Announce(CounterBtn.Text);
+		private void InputView_OnTextChanged(object? sender, TextChangedEventArgs e)
+		{
+			if (sender is not TodoItem item)
+			{
+				return;
+			}
+
+			TodoListViewModel.UpdateTaskCommand.Execute(item);
 		}
 	}
 
